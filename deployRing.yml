@@ -1,0 +1,25 @@
+parameters:
+  Name: ''
+  DependsOn: []
+  ScaleUnitsWithDeploymentNames: []
+  Certificate: ''
+  ServiceName: ''
+  ProductGroups: ''
+  ScaleUnitsToSkip: ''
+
+stages:
+- stage: ${{ parameters.Name }}
+  dependsOn:
+  - ${{ each dependency in parameters.DependsOn }}:
+    - ${{ dependency }}
+
+  jobs:  
+  - ${{ each su in parameters.ScaleUnitsWithDeploymentNames }}:
+    - template: UpgradeSU.yml
+      parameters:
+        DependsOn: ${{ parameters.Name }}_begin
+        ScaleUnit: ${{ su.ScaleUnit }}
+        Certificate: ${{ parameters.Certificate }}
+        ServiceName: ${{ parameters.ServiceName }}
+        ProductGroups: ${{ parameters.ProductGroups }}
+        DeploymentName: ${{ su.DeploymentName }}

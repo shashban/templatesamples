@@ -1,0 +1,9 @@
+parameters:
+  AccountName: ''
+  TokenKeyVaultUrl: ''
+
+jobs:
+- job: WaitForUpgrade${{parameters.AccountName}}
+  pool: 'RMAgentPool'
+  steps:
+  - script: Wait for ${{parameters.AccountName}} to get upgraded using token from ${{parameters.TokenKeyVaultUrl}}

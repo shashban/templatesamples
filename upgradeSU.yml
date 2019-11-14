@@ -1,0 +1,32 @@
+parameters:
+  environmentName: ''
+  deploymentName: ''
+  AccountName: ''
+  TokenKeyVaultUrl: ''
+  RunSettings: ''
+  TestRunTitle: ''
+  certificate: ''
+
+jobs:
+- template: produpdate.yml
+  parameters:
+    environmentName: ${{parameters.environmentName}}
+    deploymentName: ${{parameters.deploymentName}}
+- template: waitforupgrade.yml
+  parameters:
+    AccountName: ${{parameters.AccountName}}
+    TokenKeyVaultUrl: ${{parameters.TokenKeyVaultUrl}}
+- job: runTests
+  displayName: Run tests on ${{parameters.deploymentName}}
+  pool: RMAgentPool
+  steps:
+  - template: downloadbuild.yml
+    parameters:
+      productGroup: 'ReleaseManagement.ProdTests,TfsScriptedDeploy,vstestconsole,StepRunner,VstsAgentPasswordMonitor,cdpscripts,ReleaseManagement.bld'
+      branch: '$(Build.Branch)'
+      certificate: ${{parameters.certificate}}
+      buildId: '$(Build.BuildId)'
+  - template: runTests.yml
+    parameters:
+      RunSettings: ${{parameters.RunSettings}}
+      TestRunTitle: ${{parameters.TestRunTitle}}

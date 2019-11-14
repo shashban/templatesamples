@@ -1,0 +1,40 @@
+...
+stages:
+- template: deployring.yml
+  parameters:
+    Name: PreFlight
+    ScaleUnitsWithDeploymentNames:
+    - ScaleUnit: tfs_ppe
+      DeploymentName: tfsppech1su1
+    Certificate: 'tfs-secure-file' # protected resource with approval check
+    ServiceName: 'rmo'
+    ProductGroups: 'Tfs.Deploy'
+
+- template: deployring.yml
+  parameters:
+    Name: Ring0
+    DependsOn:
+    - PreFlight
+    ScaleUnitsWithDeploymentNames:
+    - ScaleUnit: su6
+      DeploymentName: tfsprodwus2su6
+    - ScaleUnit: tfs_sbr_1
+      DeploymentName: tfsprodsbr1
+    Certificate: 'tfs-secure-file'
+    ServiceName: 'tfs'
+    ProductGroups: 'Tfs.Deploy'
+
+
+- template: deployring.yml
+  parameters:
+    Name: Ring1
+    DependsOn:
+    - Ring0
+    ScaleUnitsWithDeploymentNames:
+    - ScaleUnit: su6
+      DeploymentName: tfsprodwus2su6
+    - ScaleUnit: tfs_sbr_1
+      DeploymentName: tfsprodsbr1
+    Certificate: 'tfs-secure-file'
+    ServiceName: 'tfs'
+    ProductGroups: 'Tfs.Deploy'

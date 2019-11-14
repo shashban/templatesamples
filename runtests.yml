@@ -1,0 +1,6 @@
+parameters:
+  RunSettings: ''
+  TestRunTitle: ''
+
+steps:
+- script: Run tests using ${{parameters.RunSettings}} file

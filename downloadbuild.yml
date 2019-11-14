@@ -1,0 +1,8 @@
+parameters:
+  productGroup: ''
+  branch: ''
+  certificate: ''
+  buildId: ''
+
+steps:
+- script: echo download ${{parameters.productGroup}} for build ${{parameters.buildId}} from branch ${{parameters.branch}} using certificate ${{parameters.certificate}}
